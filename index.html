@@ -1,690 +1,347 @@
-```html
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Rabta - Complete Social & Chat App</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    /* Mobile-first app feel tweaks */
-    body {
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    /* Hide scrollbar for tab navigation */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabta - Global Social & Secure Vault Platform</title>
+    <!-- Tailwind CSS for Modern UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col justify-between antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
 
-  <!-- TOP HEADER -->
-  <header class="sticky top-0 z-50 bg-brand-600 text-white shadow-md">
-    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <div class="bg-white text-brand-600 w-9 h-9 rounded-full flex items-center justify-center font-black text-xl shadow">
-          ر
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-xl">
+        <div class="flex items-center space-x-2">
+            <div class="bg-indigo-600 text-white p-2 rounded-xl font-bold text-xl flex items-center justify-center w-10 h-10 shadow-lg shadow-indigo-500/30">R</div>
+            <span class="text-xl font-extrabold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Rabta Global</span>
         </div>
-        <div>
-          <h1 class="text-xl font-bold tracking-tight leading-none">Rabta</h1>
-          <p class="text-[10px] text-brand-100 flex items-center gap-1 mt-0.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 100% Free Mobile App
-          </p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="openApkGuideModal()" class="bg-amber-400 hover:bg-amber-500 text-gray-900 text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shadow transition active:scale-95">
-          <i class="fa-solid font-bold fa-mobile-screen">="></i> Play Store APK Guide
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- MAINTENANCE BANNER (Toggled by Admin) -->
-  <div id="maintenanceBanner" class="hidden bg-amber-500 text-gray-900 px-4 py-2 text-xs font-medium text-center shadow-inner">
-    ⚠️ <span class="font-bold">Maintenance Mode Active:</span> System is operating in read-only preview mode.
-  </div>
-
-  <!-- MAIN VIEW CONTAINER -->
-  <main class="max-w-md mx-auto w-full flex-1 p-3 pb-24 overflow-y-auto custom-scrollbar">
-
-    <!-- VIEW 1: SOCIAL FEED -->
-    <section id="feedView" class="space-y-4">
-      <!-- Create Post Box -->
-      <div id="createPostCard" class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-        <div class="flex items-start space-x-3">
-          <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-lg flex-shrink-0" id="userAvatar">
-            A
-          </div>
-          <div class="flex-1">
-            <textarea id="postInput" rows="3" placeholder="Rabta par aaj kya naya hai?" class="w-full text-sm border-0 focus:ring-0 resize-none outline-none p-1 placeholder-gray-400" text-gray-800></textarea>
-            <div class="flex justify-between items-center pt-2 border-t border-gray-100 mt-2">
-              <div class="flex items-center gap-3 text-gray-400 text-sm">
-                <button title="Photo" class="hover:text-brand-600 transition" onclick="alert('Photo upload simulator ready for app build!')"><i class="fa-regular fa-image"></i></button>
-                <button title="Tag" class="hover:text-brand-600 transition" onclick="alert('Tagging feature active!')"><i class="fa-solid fa-user-tag"></i></button>
-                <button title="Emoji" class="hover:text-brand-600 transition" onclick="appendEmoji('😊')"><i class="fa-regular fa-face-smile"></i></button>
-              </div>
-              <button onclick="createNewPost()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition active:scale-95 shadow-sm">
-                Post Karein
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Feed Search -->
-      <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
-        <input type="text" id="feedSearch" onkeyup="filterPosts()" placeholder="Posts talash karein..." class="w-full bg-white border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none focus:border-brand-500 shadow-sm">
-      </div>
-
-      <!-- Posts List Container -->
-      <div id="postsContainer" class="space-y-3">
-        <!-- Dynamic posts render here -->
-      </div>
-    </section>
-
-    <!-- VIEW 2: DIRECT MESSAGES -->
-    <section id="messagesView" class="hidden space-y-3">
-      <!-- Contact Selection -->
-      <div class="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-        <p class="text-xs font-semibold text-gray-500 mb-2">ACTIVE RABTA CONTACTS</p>
-        <div id="contactsList" class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          <!-- Dynamic Contacts Render Here -->
-        </div>
-      </div>
-
-      <!-- Active Chat Window -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col h-[480px]">
-        <!-- Chat Header -->
-        <div class="p-3 border-b border-gray-100 flex items-center justify-between bg-gray-50 rounded-t-xl">
-          <div class="flex items-center gap-2">
-            <div id="activeContactAvatar" class="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-xs shadow-sm">
-              S
-            </div>
-            <div>
-              <h3 id="activeContactName" class="text-sm font-bold text-gray-800">Sara Khan</h3>
-              <p class="text-[10px] text-emerald-600 font-medium">Online</p>
-            </div>
-          </div>
-          <button onclick="clearChatHistory()" class="text-xs text-gray-400 hover:text-red-500 transition" title="Clear Chat">
-            <i class="fa-regular fa-trash-can"></i>
-          </button>
-        </div>
-
-        <!-- Chat History -->
-        <div id="chatMessagesBox" class="flex-1 p-3 overflow-y-auto space-y-2.5 custom-scrollbar bg-slate-50">
-          <!-- Messages will render dynamically here -->
-        </div>
-
-        <!-- Chat Input Form -->
-        <div class="p-2.5 border-t border-gray-100 bg-white rounded-b-xl flex items-center gap-2">
-          <input type="text" id="chatInput" onkeypress="if(event.key==='Enter') sendChatMessage()" placeholder="Message likhein..." class="flex-1 border border-gray-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:border-brand-500 bg-gray-50">
-          <button onclick="sendChatMessage()" class="bg-brand-600 hover:bg-brand-700 text-white w-9 h-9 rounded-full flex items-center justify-center transition active:scale-95 shadow">
-            <i class="fa-solid fa-paper-plane text-xs"></i>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 3: ADMIN & SETTINGS PANEL -->
-    <section id="adminView" class="hidden space-y-4">
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-        <h2 class="text-base font-bold text-gray-800 mb-1 flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-brand-600"></i> Admin System Controls
-        </h2>
-        <p class="text-xs text-gray-500 mb-4">Manage live app features and persistent device data settings.</p>
-
-        <!-- Feature Switches -->
-        <div class="space-y-3 divide-y divide-gray-100">
-          <div class="flex items-center justify-between pt-2">
-            <div>
-              <p class="text-xs font-semibold text-gray-800">Posting Feature Enabled</p>
-              <p class="text-[10px] text-gray-400">Allow users to publish new posts to feed</p>
-            </div>
-            <input type="checkbox" id="togglePosts" onchange="toggleAdminSetting('allowPosts', this.checked)" class="w-4 h-4 text-brand-600 rounded focus:ring-brand-500" checked>
-          </div>
-
-          <div class="flex items-center justify-between pt-3">
-            <div>
-              <p class="text-xs font-semibold text-gray-800">Messaging Feature Enabled</p>
-              <p class="text-[10px] text-gray-400">Allow users to send direct messages</p>
-            </div>
-            <input type="checkbox" id="toggleMessaging" onchange="toggleAdminSetting('allowMessaging', this.checked)" class="w-4 h-4 text-brand-600 rounded focus:ring-brand-500" checked>
-          </div>
-
-          <div class="flex items-center justify-between pt-3">
-            <div>
-              <p class="text-xs font-semibold text-gray-800">Maintenance Mode</p>
-              <p class="text-[10px] text-gray-400">Show maintenance notice top bar</p>
-            </div>
-            <input type="checkbox" id="toggleMaintenance" onchange="toggleAdminSetting('maintenance', this.checked)" class="w-4 h-4 text-brand-600 rounded focus:ring-brand-500">
-          </div>
-        </div>
-      </div>
-
-      <!-- Storage Stats & Reset -->
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-        <h3 class="text-xs font-bold text-gray-700 uppercase mb-3">LocalStorage Data Usage</h3>
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="bg-blue-50 p-3 rounded-lg text-center border border-blue-100">
-            <span id="statPostsCount" class="text-xl font-black text-brand-600">0</span>
-            <p class="text-[10px] text-gray-500 font-medium">Saved Posts</p>
-          </div>
-          <div class="bg-emerald-50 p-3 rounded-lg text-center border border-emerald-100">
-            <span id="statMsgsCount" class="text-xl font-black text-emerald-600">0</span>
-            <p class="text-[10px] text-gray-500 font-medium">Saved Messages</p>
-          </div>
-        </div>
-        <button onclick="resetAllAppData()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold py-2.5 rounded-lg transition">
-          Reset Application Local Storage
-        </button>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- APK PUBLISHING MODAL GUIDE -->
-  <div id="apkGuideModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
-      <button onclick="closeApkGuideModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 text-lg">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="text-center">
-        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl mb-2 font-bold">
-          📱
-        </div>
-        <h3 class="text-base font-bold text-gray-900">Rabta Play Store Guide</h3>
-        <p class="text-xs text-gray-500">How to convert this web app into a Play Store APK completely FREE without credit cards or APIs!</p>
-      </div>
-
-      <div class="space-y-3 text-xs text-gray-700">
-        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <p class="font-bold text-brand-600 mb-1">Step 1: Host Code for Free</p>
-          <p>Upload this <code>index.html</code> code file to <strong>GitHub Pages</strong>, <strong>Netlify</strong>, or <strong>Vercel</strong> (100% Free Hosting).</p>
-        </div>
-
-        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <p class="font-bold text-brand-600 mb-1">Step 2: Generate APK File</p>
-          <p>Open <strong>WebIntoApp.com</strong> or <strong>PWABuilder.com</strong>, paste your free hosted live URL, enter "Rabta" as App Name, and click <em>Download APK / AAB</em>.</p>
-        </div>
-
-        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <p class="font-bold text-brand-600 mb-1">Step 3: Publish to Play Store</p>
-          <p>Upload the generated <code>.aab</code> file directly to your Google Play Console account!</p>
-        </div>
-      </div>
-
-      <button onclick="closeApkGuideModal()" class="w-full bg-brand-600 text-white font-semibold py-2 rounded-xl text-xs">
-        Got It, Thanks!
-      </button>
-    </div>
-  </div>
-
-  <!-- BOTTOM TAB NAVIGATION -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
-    <div class="max-w-md mx-auto grid grid-cols-3 text-center">
-      <button onclick="switchTab('feed')" id="navFeed" class="py-2.5 flex flex-col items-center text-brand-600 font-bold transition">
-        <i class="fa-solid fa-house text-lg"></i>
-        <span class="text-[10px] mt-0.5">Feed</span>
-      </button>
-
-      <button onclick="switchTab('messages')" id="navMessages" class="py-2.5 flex flex-col items-center text-gray-400 hover:text-brand-600 font-medium transition relative">
-        <i class="fa-solid fa-comments text-lg"></i>
-        <span class="text-[10px] mt-0.5">Messages</span>
-        <span id="unreadBadge" class="hidden absolute top-2 right-8 w-2 h-2 rounded-full bg-red-500"></span>
-      </button>
-
-      <button onclick="switchTab('admin')" id="navAdmin" class="py-2.5 flex flex-col items-center text-gray-400 hover:text-brand-600 font-medium transition">
-        <i class="fa-solid fa-gears text-lg"></i>
-        <span class="text-[10px] mt-0.5">Admin</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- JAVASCRIPT APP LOGIC & LOCALSTORAGE HANDLERS -->
-  <script>
-    // Initial App Data Defaults
-    const DEFAULT_POSTS = [
-      {
-        id: 1,
-        author: 'Rabta Official',
-        avatar: 'R',
-        time: '5 mins ago',
-        content: 'Rabta Web App operational! Iss application ko aap free APK banakar Play Store par publishing ke liye tayar kar sakte hain.',
-        likes: 12,
-        liked: false,
-        comments: ['Wah bohot umdah!']
-      },
-      {
-        id: 2,
-        author: 'Ali Raza',
-        avatar: 'A',
-        time: '1 hr ago',
-        content: 'Rabta system mobile layout par smooth chal raha hai.',
-        likes: 5,
-        liked: false,
-        comments: []
-      }
-    ];
-
-    const CONTACTS = [
-      { id: 'sara', name: 'Sara Khan', avatar: 'S', color: 'bg-emerald-500' },
-      { id: 'zain', name: 'Zain Ahmed', avatar: 'Z', color: 'bg-indigo-500' },
-      { id: 'rabta_bot', name: 'Rabta Bot', avatar: 'R', color: 'bg-brand-600' }
-    ];
-
-    const DEFAULT_MESSAGES = {
-      sara: [
-        { sender: 'them', text: 'Salam! Kaise hain aap?' },
-        { sender: 'me', text: 'Walaikumasalam! Rabta app testing chal rahi hai.' }
-      ],
-      zain: [
-        { sender: 'them', text: 'Play Store par APK publish ho sakti hai?' }
-      ],
-      rabta_bot: [
-        { sender: 'them', text: 'Rabta automated assistant mein khushamdeed!' }
-      ]
-    };
-
-    const DEFAULT_SETTINGS = {
-      allowPosts: true,
-      allowMessaging: true,
-      maintenance: false
-    };
-
-    // State Variables
-    let posts = [];
-    let messagesData = {};
-    let activeContactId = 'sara';
-    let appSettings = {};
-
-    // Load Local Data on Launch
-    window.onload = function() {
-      loadLocalStorageData();
-      renderContacts();
-      renderPosts();
-      renderChatMessages();
-      applySettingsUI();
-      updateAdminStats();
-    };
-
-    function loadLocalStorageData() {
-      posts = JSON.parse(localStorage.getItem('rabta_posts')) || DEFAULT_POSTS;
-      messagesData = JSON.parse(localStorage.getItem('rabta_messages')) || DEFAULT_MESSAGES;
-      appSettings = JSON.parse(localStorage.getItem('rabta_settings')) || DEFAULT_SETTINGS;
-    }
-
-    function savePostsToStorage() {
-      localStorage.setItem('rabta_posts', JSON.stringify(posts));
-      updateAdminStats();
-    }
-
-    function saveMessagesToStorage() {
-      localStorage.setItem('rabta_messages', JSON.stringify(messagesData));
-      updateAdminStats();
-    }
-
-    function saveSettingsToStorage() {
-      localStorage.setItem('rabta_settings', JSON.stringify(appSettings));
-    }
-
-    // View Switching Logic
-    function switchTab(tabName) {
-      document.getElementById('feedView').classList.add('hidden');
-      document.getElementById('messagesView').classList.add('hidden');
-      document.getElementById('adminView').classList.add('hidden');
-
-      document.getElementById('navFeed').className = 'py-2.5 flex flex-col items-center text-gray-400 hover:text-brand-600 font-medium transition';
-      document.getElementById('navMessages').className = 'py-2.5 flex flex-col items-center text-gray-400 hover:text-brand-600 font-medium transition relative';
-      document.getElementById('navAdmin').className = 'py-2.5 flex flex-col items-center text-gray-400 hover:text-brand-600 font-medium transition';
-
-      if (tabName === 'feed') {
-        document.getElementById('feedView').classList.remove('hidden');
-        document.getElementById('navFeed').className = 'py-2.5 flex flex-col items-center text-brand-600 font-bold transition';
-      } else if (tabName === 'messages') {
-        document.getElementById('messagesView').classList.remove('hidden');
-        document.getElementById('navMessages').className = 'py-2.5 flex flex-col items-center text-brand-600 font-bold transition relative';
-        scrollChatToBottom();
-      } else if (tabName === 'admin') {
-        document.getElementById('adminView').classList.remove('hidden');
-        document.getElementById('navAdmin').className = 'py-2.5 flex flex-col items-center text-brand-600 font-bold transition';
-      }
-    }
-
-    // FEED & POST LOGIC
-    function renderPosts(filterTerm = '') {
-      const container = document.getElementById('postsContainer');
-      container.innerHTML = '';
-
-      const filtered = posts.filter(p => p.content.toLowerCase().includes(filterTerm.toLowerCase()) || p.author.toLowerCase().includes(filterTerm.toLowerCase()));
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-8 text-gray-400 text-xs">Koi post nahi mili.</div>';
-        return;
-      }
-
-      filtered.forEach(post => {
-        const postCard = document.createElement('div');
-        postCard.className = 'bg-white rounded-xl p-4 shadow-sm border border-gray-200 space-y-3';
-        postCard.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-              <div class="w-9 h-9 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center text-sm">
-                ${post.avatar}
-              </div>
-              <div>
-                <h4 class="text-xs font-bold text-gray-800">${post.author}</h4>
-                <p class="text-[10px] text-gray-400">${post.time}</p>
-              </div>
-            </div>
-            <button onclick="deletePost(${post.id})" class="text-gray-300 hover:text-red-500 text-xs transition">
-              <i class="fa-solid fa-trash"></i>
+        <div class="flex items-center space-x-3">
+            <button onclick="switchTab('vault')" class="bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border border-slate-700 transition">
+                <i class="fa-solid fa-lock"></i>
+                <span class="hidden sm:inline">Secure Vault</span>
             </button>
-          </div>
-
-          <p class="text-xs text-gray-800 leading-relaxed">${escapeHtml(post.content)}</p>
-
-          <div class="flex items-center justify-between pt-2 border-t border-gray-100 text-xs">
-            <button onclick="toggleLike(${post.id})" class="flex items-center gap-1.5 ${post.liked ? 'text-red-500 font-bold' : 'text-gray-500'} hover:text-red-500 transition">
-              <i class="${post.liked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
-              <span>${post.likes}</span>
+            <button onclick="switchTab('profile')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border border-slate-700 transition">
+                <i class="fa-solid fa-user-gear"></i>
+                <span id="navUsername" class="truncate max-w-[80px]">Profile</span>
             </button>
-            <div class="flex items-center gap-1.5 text-gray-500">
-              <i class="fa-regular fa-comment"></i>
-              <span>${post.comments.length} Comments</span>
+            <button onclick="openAdminPanel()" id="adminNavBtn" class="hidden bg-red-500/10 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">Admin</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-2xl w-full mx-auto p-4 space-y-6 pb-24">
+        
+        <!-- FEED TAB -->
+        <div id="tab-feed" class="space-y-6">
+            <!-- Create Post Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <form onsubmit="handlePostCreate(event)" class="space-y-3">
+                    <textarea id="postText" rows="3" placeholder="What's happening across the world, Rabta community?" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none transition" required></textarea>
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+                        <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center space-x-2 transition">
+                            <i class="fa-solid fa-image"></i>
+                            <span>Attach Media</span>
+                            <input type="file" id="postImageFile" accept="image/*,video/*" class="hidden" onchange="previewPostMedia(event)">
+                        </label>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2 rounded-xl shadow-lg shadow-indigo-600/30 text-sm transition">Broadcast</button>
+                    </div>
+                    <div id="postMediaPreviewContainer" class="hidden relative mt-2">
+                        <img id="postMediaPreviewImg" src="" class="max-h-40 rounded-xl object-cover w-full border border-slate-800">
+                        <button type="button" onclick="clearPostMedia()" class="absolute top-2 right-2 bg-slate-900/90 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </form>
             </div>
-          </div>
 
-          <!-- Comments List -->
-          ${post.comments.length > 0 ? `
-            <div class="bg-gray-50 p-2 rounded-lg space-y-1">
-              ${post.comments.map(c => `<p class="text-[11px] text-gray-700"><strong>User:</strong> ${escapeHtml(c)}</p>`).join('')}
+            <!-- Global Feed Stream -->
+            <div id="globalFeed" class="space-y-4"></div>
+        </div>
+
+        <!-- SECURE VAULT TAB (Private Folder for Files, Pictures & Videos) -->
+        <div id="tab-vault" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-shield-halved text-indigo-400 text-xl"></i>
+                        <h2 class="font-bold text-lg text-slate-100">Rabta Secure Vault</h2>
+                    </div>
+                    <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full font-semibold">Private & Encrypted</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">Yahan aap apni tamam confidential pictures, videos aur private files bilkul mehfooz tareeqay se store kar sakte hain. Yeh folder sirf aapke paas encrypted password se khulega.</p>
+                
+                <div class="bg-slate-950 border border-dashed border-slate-800 rounded-xl p-6 text-center space-y-3">
+                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-500"></i>
+                    <div>
+                        <p class="text-sm font-semibold text-slate-200">Upload to Private Vault</p>
+                        <p class="text-xs text-slate-500">Select images, videos or documents</p>
+                    </div>
+                    <input type="file" id="vaultFileInput" class="hidden" multiple onchange="handleVaultUpload(event)">
+                    <button onclick="document.getElementById('vaultFileInput').click()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow transition">Browse Files</button>
+                </div>
             </div>
-          ` : ''}
 
-          <!-- Add Comment Input -->
-          <div class="flex gap-2">
-            <input type="text" id="commentInput-${post.id}" placeholder="Jawab dein..." class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-[11px] focus:outline-none focus:border-brand-500">
-            <button onclick="addComment(${post.id})" class="bg-gray-100 hover:bg-brand-600 hover:text-white text-gray-600 text-[11px] font-semibold px-3 py-1.5 rounded-lg transition">
-              Send
-            </button>
-          </div>
-        `;
-        container.appendChild(postCard);
-      });
-    }
+            <!-- Stored Vault Items List -->
+            <div class="space-y-3">
+                <h3 class="font-bold text-sm text-slate-300">Your Encrypted Vault Items</h3>
+                <div id="vaultItemsContainer" class="grid grid-cols-2 gap-3">
+                    <!-- Dynamic Vault items -->
+                </div>
+            </div>
+        </div>
 
-    function createNewPost() {
-      if (!appSettings.allowPosts) {
-        alert('Admin ne new posting temporarily disable ki hui hai.');
-        return;
-      }
+        <!-- PROFILE & SETTINGS TAB -->
+        <div id="tab-profile" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
+                <h2 class="font-bold text-lg border-b border-slate-800 pb-3">Account & Profile Settings</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-slate-400 font-medium">Display Username</label>
+                        <input type="text" id="profileUsername" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 font-medium">Email Address</label>
+                        <input type="email" id="profileEmail" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 font-medium">Bio / About</label>
+                        <textarea id="profileBio" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 font-medium">Change Password</label>
+                        <input type="password" id="profilePassword" placeholder="New secure password" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
 
-      const input = document.getElementById('postInput');
-      const text = input.value.trim();
-      if (!text) return;
+                <button onclick="saveUserProfile()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-sm shadow-lg transition">Save Changes</button>
+            </div>
+        </div>
+    </main>
 
-      const newPost = {
-        id: Date.now(),
-        author: 'Aap (User)',
-        avatar: 'U',
-        time: 'Just now',
-        content: text,
-        likes: 0,
-        liked: false,
-        comments: []
-      };
+    <!-- ADMIN MODAL PANEL -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-shield-dog text-red-400"></i>
+                    <h3 class="font-bold text-base text-slate-100">Rabta Master Admin Control Panel</h3>
+                </div>
+                <button onclick="closeAdminPanel()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4 text-xs text-slate-300">
+                <p>Welcome Master Admin! Here you can moderate global user feeds, delete abusive posts, or manage network parameters.</p>
+                <div id="adminPostsList" class="space-y-2">
+                    <!-- Admin Feed Management -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-      posts.unshift(newPost);
-      savePostsToStorage();
-      renderPosts();
-      input.value = '';
-    }
+    <!-- Bottom Mobile Navigation Bar -->
+    <nav class="bg-slate-900 border-t border-slate-800 fixed bottom-0 left-0 right-0 py-3 px-6 flex justify-around items-center z-40 shadow-2xl">
+        <button onclick="switchTab('feed')" id="nav-btn-feed" class="text-indigo-400 flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-globe text-lg"></i><span class="text-[10px]">Feed</span></button>
+        <button onclick="switchTab('vault')" id="nav-btn-vault" class="text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-lock text-lg"></i><span class="text-[10px]">Vault</span></button>
+        <button onclick="switchTab('profile')" id="nav-btn-profile" class="text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px]">Profile</span></button>
+    </nav>
 
-    function toggleLike(postId) {
-      posts = posts.map(p => {
-        if (p.id === postId) {
-          return {
-            ...p,
-            likes: p.liked ? p.likes - 1 : p.likes + 1,
-            liked: !p.liked
-          };
+    <!-- Core JavaScript Application Logic -->
+    <script>
+        // App State & User Data Initialization
+        let currentUser = JSON.parse(localStorage.getItem('rabta_user_profile')) || {
+            username: "HamzaTariq",
+            email: "hamzatariq864@gmail.com",
+            bio: "Building Rabta Global Network from Pakistan.",
+            password: "secure123",
+            isAdmin: true // Set to true for you to test admin features instantly
+        };
+
+        let posts = JSON.parse(localStorage.getItem('rabta_global_posts')) || [
+            {
+                id: 1,
+                author: "Rabta Official",
+                content: "Welcome to Rabta! Designed for global connectivity with high security and private media vaults. 🌍🔒",
+                media: "",
+                likes: 520,
+                liked: false,
+                comments: [{author: "Ali", text: "Amazing platform!"}],
+                time: "Just now"
+            }
+        ];
+
+        let vaultFiles = JSON.parse(localStorage.getItem('rabta_secure_vault')) || [];
+        let tempPostMedia = "";
+
+        // Initialize UI values
+        document.getElementById('navUsername').innerText = currentUser.username;
+        document.getElementById('profileUsername').value = currentUser.username;
+        document.getElementById('profileEmail').value = currentUser.email;
+        document.getElementById('profileBio').value = currentUser.bio;
+        
+        if(currentUser.isAdmin) {
+            document.getElementById('adminNavBtn').classList.remove('hidden');
         }
-        return p;
-      });
-      savePostsToStorage();
-      renderPosts();
-    }
 
-    function addComment(postId) {
-      const input = document.getElementById(`commentInput-${postId}`);
-      const text = input.value.trim();
-      if (!text) return;
-
-      posts = posts.map(p => {
-        if (p.id === postId) {
-          return { ...p, comments: [...p.comments, text] };
+        // Tab Switching Engine
+        function switchTab(tabName) {
+            ['feed', 'vault', 'profile'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-btn-${t}`);
+                if(btn) btn.className = "text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition";
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-btn-${tabName}`);
+            if(activeBtn) activeBtn.className = "text-indigo-400 flex flex-col items-center space-y-1 transition";
+            
+            if(tabName === 'feed') renderFeed();
+            if(tabName === 'vault') renderVault();
         }
-        return p;
-      });
 
-      savePostsToStorage();
-      renderPosts();
-    }
+        // Post Media Handler
+        function previewPostMedia(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempPostMedia = e.target.result;
+                    document.getElementById('postMediaPreviewImg').src = tempPostMedia;
+                    document.getElementById('postMediaPreviewContainer').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-    function deletePost(postId) {
-      posts = posts.filter(p => p.id !== postId);
-      savePostsToStorage();
-      renderPosts();
-    }
+        function clearPostMedia() {
+            tempPostMedia = "";
+            document.getElementById('postMediaPreviewImg').src = "";
+            document.getElementById('postMediaPreviewContainer').classList.add('hidden');
+            document.getElementById('postImageFile').value = "";
+        }
 
-    function filterPosts() {
-      const query = document.getElementById('feedSearch').value;
-      renderPosts(query);
-    }
+        // Create Post
+        function handlePostCreate(e) {
+            e.preventDefault();
+            const text = document.getElementById('postText').value.trim();
+            if(!text) return;
 
-    function appendEmoji(emoji) {
-      document.getElementById('postInput').value += ' ' + emoji;
-    }
+            const newPost = {
+                id: Date.now(),
+                author: currentUser.username,
+                content: text,
+                media: tempPostMedia,
+                likes: 0,
+                liked: false,
+                comments: [],
+                time: "Just now"
+            };
 
-    // MESSAGING LOGIC
-    function renderContacts() {
-      const container = document.getElementById('contactsList');
-      container.innerHTML = '';
-      CONTACTS.forEach(c => {
-        const activeClass = c.id === activeContactId ? 'ring-2 ring-brand-600 bg-brand-50' : 'bg-gray-50';
-        const contactBtn = document.createElement('button');
-        contactBtn.className = `flex items-center gap-2 p-1.5 pr-3 rounded-full border border-gray-200 ${activeClass} transition flex-shrink-0`;
-        contactBtn.onclick = () => selectContact(c.id);
-        contactBtn.innerHTML = `
-          <div class="w-6 h-6 rounded-full ${c.color} text-white font-bold flex items-center justify-center text-[10px]">
-            ${c.avatar}
-          </div>
-          <span class="text-xs font-semibold text-gray-700">${c.name}</span>
-        `;
-        container.appendChild(contactBtn);
-      });
-    }
+            posts.unshift(newPost);
+            syncStorage();
+            renderFeed();
+            document.getElementById('postText').value = "";
+            clearPostMedia();
+        }
 
-    function selectContact(contactId) {
-      activeContactId = contactId;
-      const contact = CONTACTS.find(c => c.id === contactId);
-      document.getElementById('activeContactName').innerText = contact.name;
-      document.getElementById('activeContactAvatar').innerText = contact.avatar;
-      document.getElementById('activeContactAvatar').className = `w-8 h-8 rounded-full ${contact.color} text-white font-bold flex items-center justify-center text-xs shadow-sm`;
+        // Render Global Feed
+        function renderFeed() {
+            const container = document.getElementById('globalFeed');
+            container.innerHTML = "";
 
-      renderContacts();
-      renderChatMessages();
-    }
+            if(posts.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 py-10 text-xs">No posts available in the global network.</p>`;
+                return;
+            }
 
-    function renderChatMessages() {
-      const box = document.getElementById('chatMessagesBox');
-      box.innerHTML = '';
-      const msgs = messagesData[activeContactId] || [];
+            posts.forEach(post => {
+                let commentsHtml = '';
+                post.comments.forEach(c => {
+                    commentsHtml += `<div class="bg-slate-950 p-2 rounded-xl text-xs"><span class="font-bold text-indigo-400">${c.author}:</span> ${c.text}</div>`;
+                });
 
-      msgs.forEach(m => {
-        const isMe = m.sender === 'me';
-        const wrapper = document.createElement('div');
-        wrapper.className = `flex ${isMe ? 'justify-end' : 'justify-start'}`;
-        wrapper.innerHTML = `
-          <div class="max-w-[78%] px-3 py-2 rounded-2xl text-xs ${isMe ? 'bg-brand-600 text-white rounded-br-none' : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-sm'}">
-            ${escapeHtml(m.text)}
-          </div>
-        `;
-        box.appendChild(wrapper);
-      });
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs">${post.author.charAt(0).toUpperCase()}</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-100">${post.author}</h4>
+                                <span class="text-[10px] text-slate-500">${post.time}</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full font-medium">Global</span>
+                    </div>
+                    <p class="text-xs text-slate-200 leading-relaxed">${post.content}</p>
+                    ${post.media ? `<div class="rounded-xl overflow-hidden border border-slate-800"><img src="${post.media}" class="w-full max-h-60 object-cover"></div>` : ''}
+                    <div class="flex items-center space-x-5 text-slate-400 text-xs pt-2 border-t border-slate-800">
+                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-1.5 transition ${post.liked ? 'text-red-500 font-bold' : 'hover:text-red-400'}">
+                            <i class="${post.liked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
+                            <span>${post.likes}</span>
+                        </button>
+                        <span class="flex items-center space-x-1.5"><i class="fa-regular fa-comment text-sm"></i><span>${post.comments.length}</span></span>
+                    </div>
+                    <div class="space-y-2 pt-2 border-t border-slate-800/50">
+                        <div class="space-y-1.5 max-h-32 overflow-y-auto">${commentsHtml}</div>
+                        <div class="flex space-x-2 pt-1">
+                            <input type="text" id="comment-box-${post.id}" placeholder="Write a reply..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[11px] text-slate-100 focus:outline-none focus:border-indigo-500">
+                            <button onclick="addComment(${post.id})" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-[11px] font-semibold">Reply</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
 
-      scrollChatToBottom();
-    }
+        function toggleLike(id) {
+            const p = posts.find(item => item.id === id);
+            if(p) {
+                p.liked = !p.liked;
+                p.likes += p.liked ? 1 : -1;
+                syncStorage();
+                renderFeed();
+            }
+        }
 
-    function sendChatMessage() {
-      if (!appSettings.allowMessaging) {
-        alert('Admin ne Messaging features temporary stop kiye hain.');
-        return;
-      }
+        function addComment(id) {
+            const input = document.getElementById(`comment-box-${id}`);
+            const val = input.value.trim();
+            if(!val) return;
+            const p = posts.find(item => item.id === id);
+            if(p) {
+                p.comments.push({author: currentUser.username, text: val});
+                syncStorage();
+                renderFeed();
+            }
+        }
 
-      const input = document.getElementById('chatInput');
-      const text = input.value.trim();
-      if (!text) return;
+        // SECURE VAULT FUNCTIONS (Private folder for files/pics/videos)
+        function handleVaultUpload(event) {
+            const files = event.target.files;
+            for(let i=0; i<files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    vaultFiles.push({
+                        id: Date.now() + i,
+                        name: files[i].name,
+                        type: files[i].type,
+                        data: e.target.result,
+                        date: new Date().toLocaleDateString()
+                    });
+                    syncStorage();
+                    renderVault();
+                }
+                reader.readAsDataURL(files[i]);
+            }
+        }
 
-      if (!messagesData[activeContactId]) {
-        messagesData[activeContactId] = [];
-      }
+        function renderVault() {
+            const container = document.getElementById('vaultItemsContainer');
+            container.innerHTML = "";
 
-      messagesData[activeContactId].push({ sender: 'me', text: text });
-      saveMessagesToStorage();
-      renderChatMessages();
-      input.value = '';
+            if(vaultFiles.length === 0) {
+                container.innerHTML = `<p class="col-span-2 text-center text-slate-500 text-xs py-8">Your secure vault is currently empty.</p>`;
+                return;
+            }
 
-      // Auto reply simulation after 1.2s
-      setTimeout(() => {
-        simulateAutoReply();
-      }, 1200);
-    }
-
-    function simulateAutoReply() {
-      const replies = [
-        "Aapka Rabta message receive ho gaya!",
-        "Main Rabta test network par online hoon.",
-        "Zabardast! Interface bohot fast kaam kar raha hai."
-      ];
-      const randomReply = replies[Math.floor(Math.random() * replies.length)];
-      messagesData[activeContactId].push({ sender: 'them', text: randomReply });
-      saveMessagesToStorage();
-      renderChatMessages();
-    }
-
-    function clearChatHistory() {
-      messagesData[activeContactId] = [];
-      saveMessagesToStorage();
-      renderChatMessages();
-    }
-
-    function scrollChatToBottom() {
-      const box = document.getElementById('chatMessagesBox');
-      box.scrollTop = box.scrollHeight;
-    }
-
-    // ADMIN LOGIC
-    function applySettingsUI() {
-      document.getElementById('togglePosts').checked = appSettings.allowPosts;
-      document.getElementById('toggleMessaging').checked = appSettings.allowMessaging;
-      document.getElementById('toggleMaintenance').checked = appSettings.maintenance;
-
-      // Maintenance display
-      const banner = document.getElementById('maintenanceBanner');
-      if (appSettings.maintenance) {
-        banner.classList.remove('hidden');
-      } else {
-        banner.classList.add('hidden');
-      }
-    }
-
-    function toggleAdminSetting(key, value) {
-      appSettings[key] = value;
-      saveSettingsToStorage();
-      applySettingsUI();
-    }
-
-    function updateAdminStats() {
-      document.getElementById('statPostsCount').innerText = posts.length;
-      let totalMsgs = 0;
-      Object.keys(messagesData).forEach(k => {
-        totalMsgs += messagesData[k].length;
-      });
-      document.getElementById('statMsgsCount').innerText = totalMsgs;
-    }
-
-    function resetAllAppData() {
-      localStorage.removeItem('rabta_posts');
-      localStorage.removeItem('rabta_messages');
-      localStorage.removeItem('rabta_settings');
-      posts = DEFAULT_POSTS;
-      messagesData = DEFAULT_MESSAGES;
-      appSettings = DEFAULT_SETTINGS;
-      savePostsToStorage();
-      saveMessagesToStorage();
-      saveSettingsToStorage();
-      renderPosts();
-      renderChatMessages();
-      applySettingsUI();
-      alert('Rabta local data reset ho gaya hai!');
-    }
-
-    // MODAL HANDLERS
-    function openApkGuideModal() {
-      document.getElementById('apkGuideModal').classList.remove('hidden');
-    }
-
-    function closeApkGuideModal() {
-      document.getElementById('apkGuideModal').classList.add('hidden');
-    }
-
-    // Helper: Escaping HTML
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-    }
-  </script>
-</body>
-</html>
-```
+            vaultFiles.forEach(file => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-900 border bor

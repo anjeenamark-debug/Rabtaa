@@ -3,345 +3,582 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabta - Global Social & Secure Vault Platform</title>
-    <!-- Tailwind CSS for Modern UI -->
+    <title>Rabta - Global Social & Secure Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 font-sans">
 
-    <!-- Top Navigation Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-xl">
-        <div class="flex items-center space-x-2">
-            <div class="bg-indigo-600 text-white p-2 rounded-xl font-bold text-xl flex items-center justify-center w-10 h-10 shadow-lg shadow-indigo-500/30">R</div>
-            <span class="text-xl font-extrabold tracking-wide bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Rabta Global</span>
-        </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="switchTab('vault')" class="bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border border-slate-700 transition">
-                <i class="fa-solid fa-lock"></i>
-                <span class="hidden sm:inline">Secure Vault</span>
-            </button>
-            <button onclick="switchTab('profile')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 border border-slate-700 transition">
-                <i class="fa-solid fa-user-gear"></i>
-                <span id="navUsername" class="truncate max-w-[80px]">Profile</span>
-            </button>
-            <button onclick="openAdminPanel()" id="adminNavBtn" class="hidden bg-red-500/10 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">Admin</button>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-2xl w-full mx-auto p-4 space-y-6 pb-24">
-        
-        <!-- FEED TAB -->
-        <div id="tab-feed" class="space-y-6">
-            <!-- Create Post Card -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                <form onsubmit="handlePostCreate(event)" class="space-y-3">
-                    <textarea id="postText" rows="3" placeholder="What's happening across the world, Rabta community?" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 resize-none transition" required></textarea>
-                    <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-                        <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center space-x-2 transition">
-                            <i class="fa-solid fa-image"></i>
-                            <span>Attach Media</span>
-                            <input type="file" id="postImageFile" accept="image/*,video/*" class="hidden" onchange="previewPostMedia(event)">
-                        </label>
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-2 rounded-xl shadow-lg shadow-indigo-600/30 text-sm transition">Broadcast</button>
-                    </div>
-                    <div id="postMediaPreviewContainer" class="hidden relative mt-2">
-                        <img id="postMediaPreviewImg" src="" class="max-h-40 rounded-xl object-cover w-full border border-slate-800">
-                        <button type="button" onclick="clearPostMedia()" class="absolute top-2 right-2 bg-slate-900/90 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 transition"><i class="fa-solid fa-xmark"></i></button>
-                    </div>
-                </form>
+    <!-- AUTHENTICATION SCREEN -->
+    <div id="authScreen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 space-y-5 shadow-2xl">
+            <div class="text-center space-y-1">
+                <div class="bg-indigo-600 text-white w-12 h-12 rounded-2xl mx-auto flex items-center justify-center font-bold text-2xl shadow-lg shadow-indigo-600/30">R</div>
+                <h1 class="text-xl font-black tracking-wider text-indigo-400">RABTA GLOBAL</h1>
+                <p class="text-xs text-slate-400">Pakistan to the World - Social & Secure Network</p>
             </div>
 
-            <!-- Global Feed Stream -->
-            <div id="globalFeed" class="space-y-4"></div>
-        </div>
-
-        <!-- SECURE VAULT TAB (Private Folder for Files, Pictures & Videos) -->
-        <div id="tab-vault" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-shield-halved text-indigo-400 text-xl"></i>
-                        <h2 class="font-bold text-lg text-slate-100">Rabta Secure Vault</h2>
-                    </div>
-                    <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full font-semibold">Private & Encrypted</span>
-                </div>
-                <p class="text-xs text-slate-400 leading-relaxed">Yahan aap apni tamam confidential pictures, videos aur private files bilkul mehfooz tareeqay se store kar sakte hain. Yeh folder sirf aapke paas encrypted password se khulega.</p>
-                
-                <div class="bg-slate-950 border border-dashed border-slate-800 rounded-xl p-6 text-center space-y-3">
-                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-500"></i>
-                    <div>
-                        <p class="text-sm font-semibold text-slate-200">Upload to Private Vault</p>
-                        <p class="text-xs text-slate-500">Select images, videos or documents</p>
-                    </div>
-                    <input type="file" id="vaultFileInput" class="hidden" multiple onchange="handleVaultUpload(event)">
-                    <button onclick="document.getElementById('vaultFileInput').click()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow transition">Browse Files</button>
+            <!-- Login Box -->
+            <div id="loginFormBox" class="space-y-3">
+                <input type="email" id="loginEmail" placeholder="Email Address" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                <input type="password" id="loginPass" placeholder="Password" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xs font-bold shadow-lg transition">Login</button>
+                <div class="flex justify-between items-center text-[11px] text-slate-400 pt-1">
+                    <button onclick="showForgotModal()" class="hover:text-indigo-400">Forgot Password / Email?</button>
+                    <button onclick="toggleAuthMode('signup')" class="text-indigo-400 font-semibold">Create Account</button>
                 </div>
             </div>
 
-            <!-- Stored Vault Items List -->
-            <div class="space-y-3">
-                <h3 class="font-bold text-sm text-slate-300">Your Encrypted Vault Items</h3>
-                <div id="vaultItemsContainer" class="grid grid-cols-2 gap-3">
-                    <!-- Dynamic Vault items -->
-                </div>
-            </div>
-        </div>
-
-        <!-- PROFILE & SETTINGS TAB -->
-        <div id="tab-profile" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-5">
-                <h2 class="font-bold text-lg border-b border-slate-800 pb-3">Account & Profile Settings</h2>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-xs text-slate-400 font-medium">Display Username</label>
-                        <input type="text" id="profileUsername" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-400 font-medium">Email Address</label>
-                        <input type="email" id="profileEmail" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-400 font-medium">Bio / About</label>
-                        <textarea id="profileBio" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-400 font-medium">Change Password</label>
-                        <input type="password" id="profilePassword" placeholder="New secure password" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-sm text-slate-100 mt-1 focus:outline-none focus:border-indigo-500">
-                    </div>
-                </div>
-
-                <button onclick="saveUserProfile()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl text-sm shadow-lg transition">Save Changes</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- ADMIN MODAL PANEL -->
-    <div id="adminModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-shield-dog text-red-400"></i>
-                    <h3 class="font-bold text-base text-slate-100">Rabta Master Admin Control Panel</h3>
-                </div>
-                <button onclick="closeAdminPanel()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-4 text-xs text-slate-300">
-                <p>Welcome Master Admin! Here you can moderate global user feeds, delete abusive posts, or manage network parameters.</p>
-                <div id="adminPostsList" class="space-y-2">
-                    <!-- Admin Feed Management -->
+            <!-- Signup Box -->
+            <div id="signupFormBox" class="hidden space-y-3">
+                <input type="text" id="signupName" placeholder="Full Name / Username" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                <input type="email" id="signupEmail" placeholder="Email Address" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                <input type="password" id="signupPass" placeholder="Create Password" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+                <button onclick="handleSignup()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xs font-bold shadow-lg transition">Register Now</button>
+                <div class="text-center pt-1">
+                    <button onclick="toggleAuthMode('login')" class="text-xs text-indigo-400 font-semibold">Already have an account? Login</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Mobile Navigation Bar -->
-    <nav class="bg-slate-900 border-t border-slate-800 fixed bottom-0 left-0 right-0 py-3 px-6 flex justify-around items-center z-40 shadow-2xl">
-        <button onclick="switchTab('feed')" id="nav-btn-feed" class="text-indigo-400 flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-globe text-lg"></i><span class="text-[10px]">Feed</span></button>
-        <button onclick="switchTab('vault')" id="nav-btn-vault" class="text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-lock text-lg"></i><span class="text-[10px]">Vault</span></button>
-        <button onclick="switchTab('profile')" id="nav-btn-profile" class="text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px]">Profile</span></button>
-    </nav>
+    <!-- MAIN APP INTERFACE -->
+    <div id="mainApp" class="hidden">
+        <header class="bg-slate-900 border-b border-slate-800 p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
+            <div class="flex items-center space-x-2">
+                <div id="headerAvatar" class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white text-sm">R</div>
+                <div>
+                    <span id="headerUsername" class="text-xs font-bold block text-slate-200">Rabta User</span>
+                    <span class="text-[9px] text-indigo-400">Online Network</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="openAdmin()" id="adminHeaderBtn" class="hidden bg-red-500/20 text-red-400 border border-red-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold"><i class="fa-solid fa-shield-halved"></i> Admin</button>
+                <button onclick="handleLogout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg text-xs"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </header>
 
-    <!-- Core JavaScript Application Logic -->
+        <main class="max-w-xl mx-auto p-4 space-y-4">
+            
+            <!-- 1. FEED TAB -->
+            <section id="tab-feed" class="space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                    <textarea id="postText" rows="3" placeholder="What's happening across the globe?" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 resize-none"></textarea>
+                    
+                    <div id="postImgPreviewBox" class="hidden relative">
+                        <img id="postImgPreview" class="w-full h-36 object-cover rounded-xl border border-slate-800">
+                        <button onclick="clearPostMedia()" class="absolute top-2 right-2 bg-black/80 text-white w-6 h-6 rounded-full text-xs">&times;</button>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+                        <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-indigo-400 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5">
+                            <i class="fa-solid fa-image"></i>
+                            <span>Photo</span>
+                            <input type="file" id="postMediaInput" accept="image/*" class="hidden" onchange="previewPostMedia(event)">
+                        </label>
+                        <button onclick="createPost()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-1.5 rounded-xl text-xs font-bold shadow">Broadcast</button>
+                    </div>
+                </div>
+                <div id="feedStream" class="space-y-3"></div>
+            </section>
+
+            <!-- 2. INBOX / CHAT TAB -->
+            <section id="tab-inbox" class="hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                    <h2 class="font-bold text-sm text-indigo-400"><i class="fa-solid fa-comments"></i> Direct Messages & Inbox</h2>
+                    <div id="inboxUserList" class="space-y-2 pt-2 border-t border-slate-800">
+                        <!-- Chat users list -->
+                    </div>
+                </div>
+                <div id="chatBoxContainer" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 id="activeChatTitle" class="font-bold text-xs text-indigo-300">Chat</h3>
+                        <button onclick="closeChat()" class="text-slate-400 text-xs">&times; Close</button>
+                    </div>
+                    <div id="chatMessages" class="space-y-2 h-40 overflow-y-auto bg-slate-950 p-3 rounded-xl text-xs"></div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="chatInputMsg" placeholder="Type a message..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100">
+                        <button onclick="sendChatMessage()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. EXPLORE / FRIENDS TAB -->
+            <section id="tab-explore" class="hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                    <h2 class="font-bold text-sm text-indigo-400"><i class="fa-solid fa-users"></i> Global Community & Friends</h2>
+                </div>
+                <div id="friendsListContainer" class="space-y-2"></div>
+            </section>
+
+            <!-- 4. SECURE VAULT TAB -->
+            <section id="tab-vault" class="hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+                    <div class="flex items-center space-x-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-lock text-indigo-400"></i>
+                        <h2 class="font-bold text-sm">Secure Private Vault</h2>
+                    </div>
+                    <p class="text-xs text-slate-400">Store your personal confidential files, pictures, and videos securely.</p>
+                    <input type="file" id="vaultFileInput" class="hidden" multiple onchange="uploadVaultFiles(event)">
+                    <button onclick="document.getElementById('vaultFileInput').click()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-xl text-xs font-bold">Upload to Vault</button>
+                </div>
+                <div id="vaultGrid" class="grid grid-cols-2 gap-3"></div>
+            </section>
+
+            <!-- 5. PROFILE TAB -->
+            <section id="tab-profile" class="hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-4 text-center">
+                    <div class="relative w-20 h-20 mx-auto">
+                        <div id="profileAvatarBox" class="w-20 h-20 bg-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold text-white overflow-hidden border-2 border-indigo-500">R</div>
+                        <label class="absolute bottom-0 right-0 bg-slate-800 text-indigo-400 p-1.5 rounded-full cursor-pointer border border-slate-700 text-xs">
+                            <i class="fa-solid fa-camera"></i>
+                            <input type="file" accept="image/*" class="hidden" onchange="updateProfilePic(event)">
+                        </label>
+                    </div>
+                    <div class="space-y-2 text-left text-xs">
+                        <label class="text-slate-400">Username</label>
+                        <input type="text" id="profileNameInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-100">
+                        <label class="text-slate-400">Email Address</label>
+                        <input type="email" id="profileEmailInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-100">
+                        <label class="text-slate-400">Bio / About</label>
+                        <textarea id="profileBioInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-100"></textarea>
+                    </div>
+                    <button onclick="saveProfile()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl text-xs font-bold shadow">Save Profile</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bg-slate-900 border-t border-slate-800 fixed bottom-0 left-0 right-0 p-2.5 flex justify-around items-center z-40 shadow-2xl">
+            <button onclick="switchTab('feed')" id="nav-feed" class="text-indigo-400 flex flex-col items-center text-[10px]"><i class="fa-solid fa-globe text-base"><span>Feed</span></i></button>
+            <button onclick="switchTab('inbox')" id="nav-inbox" class="text-slate-400 flex flex-col items-center text-[10px]"><i class="fa-solid fa-comments text-base"><span>Inbox</span></i></button>
+            <button onclick="switchTab('explore')" id="nav-explore" class="text-slate-400 flex flex-col items-center text-[10px]"><i class="fa-solid fa-users text-base"><span>Friends</span></i></button>
+            <button onclick="switchTab('vault')" id="nav-vault" class="text-slate-400 flex flex-col items-center text-[10px]"><i class="fa-solid fa-lock text-base"><span>Vault</span></i></button>
+            <button onclick="switchTab('profile')" id="nav-profile" class="text-slate-400 flex flex-col items-center text-[10px]"><i class="fa-solid fa-user text-base"><span>Profile</span></i></button>
+        </nav>
+    </div>
+
+    <!-- Admin Modal (With Live User Activity Tracker) -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-4 space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="font-bold text-xs text-red-400"><i class="fa-solid fa-shield-halved"></i> Admin Panel & Live Users Tracker</h3>
+                <button onclick="closeAdmin()" class="text-slate-400 text-base">&times;</button>
+            </div>
+            <div class="space-y-2">
+                <h4 class="text-[11px] font-bold text-indigo-300">Registered Users on Platform:</h4>
+                <div id="adminUserTrackerList" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+            </div>
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+                <h4 class="text-[11px] font-bold text-red-300">Global Posts Moderation:</h4>
+                <div id="adminPostList" class="space-y-2 text-xs"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-5 space-y-3">
+            <h3 class="font-bold text-sm text-indigo-400">Account Recovery</h3>
+            <p class="text-xs text-slate-400">Enter your email address to recover your password.</p>
+            <input type="email" id="recoveryEmail" placeholder="Enter your email" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100">
+            <div class="flex space-x-2 pt-2">
+                <button onclick="recoverAccount()" class="flex-1 bg-indigo-600 text-white py-2 rounded-xl text-xs font-bold">Recover</button>
+                <button onclick="closeForgotModal()" class="flex-1 bg-slate-800 text-slate-300 py-2 rounded-xl text-xs">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
     <script>
-        // App State & User Data Initialization
-        let currentUser = JSON.parse(localStorage.getItem('rabta_user_profile')) || {
-            username: "HamzaTariq",
-            email: "hamzatariq864@gmail.com",
-            bio: "Building Rabta Global Network from Pakistan.",
-            password: "secure123",
-            isAdmin: true // Set to true for you to test admin features instantly
-        };
-
-        let posts = JSON.parse(localStorage.getItem('rabta_global_posts')) || [
-            {
-                id: 1,
-                author: "Rabta Official",
-                content: "Welcome to Rabta! Designed for global connectivity with high security and private media vaults. 🌍🔒",
-                media: "",
-                likes: 520,
-                liked: false,
-                comments: [{author: "Ali", text: "Amazing platform!"}],
-                time: "Just now"
-            }
+        let dbUsers = JSON.parse(localStorage.getItem('rabta_db_users')) || [
+            { name: "Hamza Tariq", email: "hamzatariq864@gmail.com", pass: "12345", bio: "Admin & Founder", avatar: "", admin: true, joined: "Today" },
+            { name: "Ali Khan", email: "ali@gmail.com", pass: "12345", bio: "Global User", avatar: "", admin: false, joined: "Yesterday" }
         ];
 
-        let vaultFiles = JSON.parse(localStorage.getItem('rabta_secure_vault')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('rabta_logged_user')) || null;
+        let posts = JSON.parse(localStorage.getItem('rabta_posts')) || [
+            { id: 1, author: "Hamza Tariq", text: "Welcome to Rabta Global Network!", media: "", likes: 10, dislikes: 0, likedByMe: false, dislikedByMe: false, comments: [] }
+        ];
+        let vault = JSON.parse(localStorage.getItem('rabta_vault')) || [];
+        let chats = JSON.parse(localStorage.getItem('rabta_chats')) || {};
         let tempPostMedia = "";
+        let activeChatUser = null;
 
-        // Initialize UI values
-        document.getElementById('navUsername').innerText = currentUser.username;
-        document.getElementById('profileUsername').value = currentUser.username;
-        document.getElementById('profileEmail').value = currentUser.email;
-        document.getElementById('profileBio').value = currentUser.bio;
-        
-        if(currentUser.isAdmin) {
-            document.getElementById('adminNavBtn').classList.remove('hidden');
+        if(currentUser) {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            initAppSession();
         }
 
-        // Tab Switching Engine
-        function switchTab(tabName) {
-            ['feed', 'vault', 'profile'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`nav-btn-${t}`);
-                if(btn) btn.className = "text-slate-400 hover:text-white flex flex-col items-center space-y-1 transition";
-            });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-btn-${tabName}`);
-            if(activeBtn) activeBtn.className = "text-indigo-400 flex flex-col items-center space-y-1 transition";
+        function toggleAuthMode(mode) {
+            if(mode === 'signup') {
+                document.getElementById('loginFormBox').classList.add('hidden');
+                document.getElementById('signupFormBox').classList.remove('hidden');
+            } else {
+                document.getElementById('signupFormBox').classList.add('hidden');
+                document.getElementById('loginFormBox').classList.remove('hidden');
+            }
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPass').value.trim();
+            if(!name || !email || !pass) { alert("Please fill all fields!"); return; }
+            if(dbUsers.some(u => u.email === email)) { alert("Email already registered!"); return; }
+
+            const newUser = { name, email, pass, bio: "New Global Member", avatar: "", admin: false, joined: new Date().toLocaleDateString() };
+            dbUsers.push(newUser);
+            localStorage.setItem('rabta_db_users', JSON.stringify(dbUsers));
             
-            if(tabName === 'feed') renderFeed();
-            if(tabName === 'vault') renderVault();
+            currentUser = newUser;
+            localStorage.setItem('rabta_logged_user', JSON.stringify(currentUser));
+            location.reload();
         }
 
-        // Post Media Handler
-        function previewPostMedia(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    tempPostMedia = e.target.result;
-                    document.getElementById('postMediaPreviewImg').src = tempPostMedia;
-                    document.getElementById('postMediaPreviewContainer').classList.remove('hidden');
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const found = dbUsers.find(u => u.email === email && u.pass === pass);
+
+            if(found) {
+                currentUser = found;
+                localStorage.setItem('rabta_logged_user', JSON.stringify(currentUser));
+                location.reload();
+            } else {
+                alert("Invalid Email or Password!");
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('rabta_logged_user');
+            location.reload();
+        }
+
+        function showForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
+        function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
+        function recoverAccount() {
+            const email = document.getElementById('recoveryEmail').value.trim();
+            const user = dbUsers.find(u => u.email === email);
+            if(user) { alert(`Your password is: ${user.pass}`); closeForgotModal(); }
+            else { alert("Email not found."); }
+        }
+
+        function initAppSession() {
+            document.getElementById('profileNameInput').value = currentUser.name;
+            document.getElementById('profileEmailInput').value = currentUser.email;
+            document.getElementById('profileBioInput').value = currentUser.bio;
+            document.getElementById('headerUsername').innerText = currentUser.name;
+            
+            if(currentUser.avatar) {
+                document.getElementById('headerAvatar').innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-xl">`;
+                document.getElementById('profileAvatarBox').innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                document.getElementById('headerAvatar').innerText = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('profileAvatarBox').innerText = currentUser.name.charAt(0).toUpperCase();
+            }
+
+            if(currentUser.admin) {
+                document.getElementById('adminHeaderBtn').classList.remove('hidden');
+            }
+            renderFeed();
+            renderExploreUsers();
+            renderInboxList();
+        }
+
+        function switchTab(tab) {
+            ['feed', 'inbox', 'explore', 'vault', 'profile'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "text-slate-400 flex flex-col items-center text-[10px]";
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`nav-${tab}`).className = "text-indigo-400 flex flex-col items-center text-[10px]";
+            if(tab === 'feed') renderFeed();
+            if(tab === 'explore') renderExploreUsers();
+            if(tab === 'inbox') renderInboxList();
+            if(tab === 'vault') renderVault();
+        }
+
+        function previewPostMedia(e) {
+            const f = e.target.files[0];
+            if(f) {
+                const r = new FileReader();
+                r.onload = function(ev) {
+                    tempPostMedia = ev.target.result;
+                    document.getElementById('postImgPreview').src = tempPostMedia;
+                    document.getElementById('postImgPreviewBox').classList.remove('hidden');
                 }
-                reader.readAsDataURL(file);
+                r.readAsDataURL(f);
             }
         }
 
         function clearPostMedia() {
             tempPostMedia = "";
-            document.getElementById('postMediaPreviewImg').src = "";
-            document.getElementById('postMediaPreviewContainer').classList.add('hidden');
-            document.getElementById('postImageFile').value = "";
+            document.getElementById('postImgPreviewBox').classList.add('hidden');
+            document.getElementById('postMediaInput').value = "";
         }
 
-        // Create Post
-        function handlePostCreate(e) {
-            e.preventDefault();
-            const text = document.getElementById('postText').value.trim();
-            if(!text) return;
-
-            const newPost = {
+        function createPost() {
+            const txt = document.getElementById('postText').value.trim();
+            if(!txt && !tempPostMedia) return;
+            posts.unshift({
                 id: Date.now(),
-                author: currentUser.username,
-                content: text,
+                author: currentUser.name,
+                avatar: currentUser.avatar || "",
+                text: txt,
                 media: tempPostMedia,
                 likes: 0,
-                liked: false,
-                comments: [],
-                time: "Just now"
-            };
-
-            posts.unshift(newPost);
-            syncStorage();
-            renderFeed();
+                dislikes: 0,
+                likedByMe: false,
+                dislikedByMe: false,
+                comments: []
+            });
+            syncData();
             document.getElementById('postText').value = "";
             clearPostMedia();
+            renderFeed();
         }
 
-        // Render Global Feed
         function renderFeed() {
-            const container = document.getElementById('globalFeed');
-            container.innerHTML = "";
-
+            const stream = document.getElementById('feedStream');
+            stream.innerHTML = "";
             if(posts.length === 0) {
-                container.innerHTML = `<p class="text-center text-slate-500 py-10 text-xs">No posts available in the global network.</p>`;
+                stream.innerHTML = `<p class="text-center text-slate-500 text-xs py-8">No posts yet.</p>`;
                 return;
             }
-
-            posts.forEach(post => {
-                let commentsHtml = '';
-                post.comments.forEach(c => {
-                    commentsHtml += `<div class="bg-slate-950 p-2 rounded-xl text-xs"><span class="font-bold text-indigo-400">${c.author}:</span> ${c.text}</div>`;
+            posts.forEach(p => {
+                let comHtml = "";
+                p.comments.forEach(c => {
+                    comHtml += `<div class="bg-slate-950 p-1.5 rounded text-[11px]"><span class="text-indigo-400 font-bold">${c.author}:</span> ${c.text}</div>`;
                 });
 
+                const div = document.createElement('div');
+                div.className = "bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2 shadow";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center font-bold text-xs text-white overflow-hidden">${p.avatar ? `<img src="${p.avatar}" class="w-full h-full object-cover">` : p.author.charAt(0)}</div>
+                        <span class="font-bold text-xs text-slate-200">${p.author}</span>
+                    </div>
+                    <p class="text-xs text-slate-200">${p.text}</p>
+                    ${p.media ? `<img src="${p.media}" class="rounded-xl w-full h-40 object-cover border border-slate-800">` : ''}
+                    <div class="flex items-center space-x-4 text-slate-400 text-xs pt-1">
+                        <button onclick="toggleLike(${p.id})" class="flex items-center space-x-1 ${p.likedByMe ? 'text-indigo-400 font-bold' : 'hover:text-indigo-300'}"><i class="fa-solid fa-thumbs-up"></i> <span>${p.likes}</span></button>
+                        <button onclick="toggleDislike(${p.id})" class="flex items-center space-x-1 ${p.dislikedByMe ? 'text-red-400 font-bold' : 'hover:text-red-300'}"><i class="fa-solid fa-thumbs-down"></i> <span>${p.dislikes}</span></button>
+                        <span><i class="fa-regular fa-comment"></i> ${p.comments.length}</span>
+                    </div>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="space-y-1 max-h-24 overflow-y-auto">${comHtml}</div>
+                        <div class="flex space-x-1 pt-1">
+                            <input type="text" id="cbox-${p.id}" placeholder="Reply..." class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-slate-100">
+                            <button onclick="addComment(${p.id})" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-[11px]">Send</button>
+                        </div>
+                    </div>
+                `;
+                stream.appendChild(div);
+            });
+        }
+
+        function toggleLike(id) {
+            const p = posts.find(x => x.id === id);
+            if(p) {
+                if(p.likedByMe) { p.likes--; p.likedByMe = false; }
+                else { p.likes++; p.likedByMe = true; if(p.dislikedByMe) { p.dislikes--; p.dislikedByMe = false; } }
+                syncData(); renderFeed();
+            }
+        }
+
+        function toggleDislike(id) {
+            const p = posts.find(x => x.id === id);
+            if(p) {
+                if(p.dislikedByMe) { p.dislikes--; p.dislikedByMe = false; }
+                else { p.dislikes++; p.dislikedByMe = true; if(p.likedByMe) { p.likes--; p.likedByMe = false; } }
+                syncData(); renderFeed();
+            }
+        }
+
+        function addComment(id) {
+            const box = document.getElementById(`cbox-${id}`);
+            const val = box.value.trim();
+            if(!val) return;
+            const p = posts.find(x => x.id === id);
+            if(p) { p.comments.push({ author: currentUser.name, text: val }); syncData(); renderFeed(); }
+        }
+
+        // INBOX CHAT SYSTEM
+        function renderInboxList() {
+            const container = document.getElementById('inboxUserList');
+            container.innerHTML = "";
+            dbUsers.forEach(u => {
+                if(u.email === currentUser.email) return;
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 cursor-pointer hover:bg-slate-800 transition";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs text-white">${u.name.charAt(0)}</div>
+                        <span class="text-xs font-bold text-slate-200">${u.name}</span>
+                    </div>
+                    <button onclick="openChat('${u.email}', '${u.name}')" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-[10px]">Chat</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function openChat(email, name) {
+            activeChatUser = email;
+            document.getElementById('activeChatTitle').innerText = `Chat with ${name}`;
+            document.getElementById('chatBoxContainer').classList.remove('hidden');
+            renderChatMessages();
+        }
+
+        function closeChat() {
+            document.getElementById('chatBoxContainer').classList.add('hidden');
+            activeChatUser = null;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInputMsg');
+            const txt = input.value.trim();
+            if(!txt || !activeChatUser) return;
+            
+            const chatId = [currentUser.email, activeChatUser].sort().join('_');
+            if(!chats[chatId]) chats[chatId] = [];
+            
+            chats[chatId].push({ sender: currentUser.name, text: txt });
+            localStorage.setItem('rabta_chats', JSON.stringify(chats));
+            input.value = "";
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = "";
+            const chatId = [currentUser.email, activeChatUser].sort().join('_');
+            const msgList = chats[chatId] || [];
+            
+            if(msgList.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500">No messages yet. Say hello!</p>`;
+                return;
+            }
+            msgList.forEach(m => {
+                container.innerHTML += `<div><b>${m.sender}:</b> ${m.text}</div>`;
+            });
+        }
+
+        function renderExploreUsers() {
+            const container = document.getElementById('friendsListContainer');
+            container.innerHTML = "";
+            dbUsers.forEach(u => {
+                if(u.email === currentUser.email) return;
                 const card = document.createElement('div');
-                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3";
+                card.className = "flex justify-between items-center bg-slate-900 border border-slate-800 p-3 rounded-xl";
                 card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2.5">
-                            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs">${post.author.charAt(0).toUpperCase()}</div>
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-100">${post.author}</h4>
-                                <span class="text-[10px] text-slate-500">${post.time}</span>
-                            </div>
-                        </div>
-                        <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full font-medium">Global</span>
-                    </div>
-                    <p class="text-xs text-slate-200 leading-relaxed">${post.content}</p>
-                    ${post.media ? `<div class="rounded-xl overflow-hidden border border-slate-800"><img src="${post.media}" class="w-full max-h-60 object-cover"></div>` : ''}
-                    <div class="flex items-center space-x-5 text-slate-400 text-xs pt-2 border-t border-slate-800">
-                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-1.5 transition ${post.liked ? 'text-red-500 font-bold' : 'hover:text-red-400'}">
-                            <i class="${post.liked ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i>
-                            <span>${post.likes}</span>
-                        </button>
-                        <span class="flex items-center space-x-1.5"><i class="fa-regular fa-comment text-sm"></i><span>${post.comments.length}</span></span>
-                    </div>
-                    <div class="space-y-2 pt-2 border-t border-slate-800/50">
-                        <div class="space-y-1.5 max-h-32 overflow-y-auto">${commentsHtml}</div>
-                        <div class="flex space-x-2 pt-1">
-                            <input type="text" id="comment-box-${post.id}" placeholder="Write a reply..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-[11px] text-slate-100 focus:outline-none focus:border-indigo-500">
-                            <button onclick="addComment(${post.id})" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-[11px] font-semibold">Reply</button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs text-white overflow-hidden">${u.avatar ? `<img src="${u.avatar}" class="w-full h-full object-cover">` : u.name.charAt(0)}</div>
+                        <div>
+                            <div class="font-bold text-xs text-slate-200">${u.name}</div>
+                            <div class="text-[10px] text-slate-400">${u.bio}</div>
                         </div>
                     </div>
+                    <button onclick="addFriend('${u.name}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg text-[10px] font-semibold"><i class="fa-solid fa-user-plus"></i> Add Friend</button>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function toggleLike(id) {
-            const p = posts.find(item => item.id === id);
-            if(p) {
-                p.liked = !p.liked;
-                p.likes += p.liked ? 1 : -1;
-                syncStorage();
-                renderFeed();
-            }
-        }
+        function addFriend(name) { alert(`Friend request sent to ${name}!`); }
 
-        function addComment(id) {
-            const input = document.getElementById(`comment-box-${id}`);
-            const val = input.value.trim();
-            if(!val) return;
-            const p = posts.find(item => item.id === id);
-            if(p) {
-                p.comments.push({author: currentUser.username, text: val});
-                syncStorage();
-                renderFeed();
-            }
-        }
-
-        // SECURE VAULT FUNCTIONS (Private folder for files/pics/videos)
-        function handleVaultUpload(event) {
-            const files = event.target.files;
-            for(let i=0; i<files.length; i++) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    vaultFiles.push({
-                        id: Date.now() + i,
-                        name: files[i].name,
-                        type: files[i].type,
-                        data: e.target.result,
-                        date: new Date().toLocaleDateString()
-                    });
-                    syncStorage();
-                    renderVault();
+        function updateProfilePic(e) {
+            const f = e.target.files[0];
+            if(f) {
+                const r = new FileReader();
+                r.onload = function(ev) {
+                    currentUser.avatar = ev.target.result;
+                    document.getElementById('profileAvatarBox').innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-full">`;
+                    document.getElementById('headerAvatar').innerHTML = `<img src="${currentUser.avatar}" class="w-full h-full object-cover rounded-xl">`;
+                    saveProfile();
                 }
-                reader.readAsDataURL(files[i]);
+                r.readAsDataURL(f);
+            }
+        }
+
+        function uploadVaultFiles(e) {
+            const files = e.target.files;
+            for(let i=0; i<files.length; i++) {
+                const r = new FileReader();
+                r.onload = function(ev) {
+                    vault.push({ id: Date.now() + i, name: files[i].name, data: ev.target.result });
+                    syncData(); renderVault();
+                }
+                r.readAsDataURL(files[i]);
             }
         }
 
         function renderVault() {
-            const container = document.getElementById('vaultItemsContainer');
-            container.innerHTML = "";
-
-            if(vaultFiles.length === 0) {
-                container.innerHTML = `<p class="col-span-2 text-center text-slate-500 text-xs py-8">Your secure vault is currently empty.</p>`;
+            const grid = document.getElementById('vaultGrid');
+            grid.innerHTML = "";
+            if(vault.length === 0) {
+                grid.innerHTML = `<p class="col-span-2 text-center text-slate-500 text-xs py-6">Your secure vault is empty.</p>`;
                 return;
             }
+            vault.forEach(v => {
+                const el = document.createElement('div');
+                el.className = "bg-slate-900 border border-slate-800 rounded-xl p-2 space-y-1";
+                el.innerHTML = `
+                    <img src="${v.data}" class="w-full h-24 object-cover rounded-lg border border-slate-800">
+                    <div class="text-[10px] truncate text-slate-300">${v.name}</div>
+                    <button onclick="deleteVault(${v.id})" class="text-red-400 text-[10px]">Delete</button>
+                `;
+                grid.appendChild(el);
+            });
+        }
 
-            vaultFiles.forEach(file => {
-                const item = document.createElement('div');
-                item.className = "bg-slate-900 border bor
+        function deleteVault(id) {
+            vault = vault.filter(v => v.id !== id);
+            syncData(); renderVault();
+        }
+
+        function saveProfile() {
+            currentUser.name = document.getElementById('profileNameInput').value;
+            currentUser.email = document.getElementById('profileEmailInput').value;
+            currentUser.bio = document.getElementById('profileBioInput').value;
+            
+            const idx = dbUsers.findIndex(u => u.email === currentUser.email);
+            if(idx !== -1) dbUsers[idx] = currentUser;
+            
+            localStorage.setItem('rabta_db_users', JSON.stringify(dbUsers));
+            localStorage.setItem('rabta_logged_user', JSON.stringify(currentUser));
+            document.getElementById('headerUsername').innerText = currentUser.name;
+            alert("Profile updated successfully!");
+        }
+
+        // ADMIN PANEL WITH LIVE USER TRACKING
+        function openAdmin() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            
+            // Render Live Registered Users Tracker
+            const trackerList = document.getElementById('adminUserTrackerList');
+            trackerList.innerHTML = "";
+            dbUsers.forEach(u => {
+                trackerList.innerHTML += `<div class="flex justify-between items-center bg-slate-950 p-2 rounded text-xs border border-slate-800"><span class="text-slate-200"><b>${u.name}</b> (${u.email})</span><span class="text-[10px] text-indigo-400">${u.joined || 'Active'}</span></div>`;
+            });
+
+            // Render Posts Moderation
+            const list = document.getElementById('adminPostList');
+            list.innerHTML = "";
+            posts.forEach(p => {
+                list.innerHTML += `<div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800"><span class="text-slate-300"><b>${p.author}:</b> ${p.text.substring(0,20)}...</span><button onclick="adminDeletePost(${p.id})" class="text-red-400 font-bold">Delete</button></div>`;
+            });
+        }
+
+        function closeAdmin() { document.getElementById('adminModal').classList.add('hidden'); }
+        function adminDeletePost(id) { posts = posts.filter(p => p.id !== id); syncData(); openAdmin(); renderFeed(); }
+
+        function syncData() {
+            localStorage.setItem('rabta_posts', JSON.stringify(posts));
+            localStorage.setItem('rabta_vault', JSON.stringify(vault));
+            localStorage.setItem('rabta_db_users', JSON.stringify(dbUsers));
+        }
+    </script>
+</body>
+</html>
